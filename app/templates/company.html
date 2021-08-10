@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .wrap{
+            display: flex;
+            justify-content: center;
+        }
+        .auth{
+            width: 50%;
+            padding: 1.2rem 0.8rem 1.2rem 0.8rem;
+            display: flex;
+            background-color: #0F0F0F;
+            height: 6rem;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+        }
+        .auth input{
+            height: 1.5rem;
+            width: 80%;
+            border: none;
+            border-radius: 10px;
+        }
+        .auth input[type=button]{
+            transition-duration: 1s;
+            height: 1.7rem;
+            border-radius: 0;
+            width: 50%;
+        }
+        .auth input[type=button]:hover{
+            width: 30%;
+            transition-duration: 1s;
+            background-color: rgb(224, 147, 147);
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="app">
+        <h1>Hi, {{login}}</h1>
+        Авторизация
+        <div class="wrap">
+        <div class="auth" v-if="anon">  
+            <input type="text" name="login" required>
+            <input type="password" name="password" required>
+            <input v-on:click="autorize" type="button" value="Log In">
+        </div>
+        </div>
+        Регистрация
+        <div class="wrap">
+            <div class="auth" v-if="anon">  
+                <input type="text" name="login" required>
+                <input type="password" name="password" required>
+                <input v-on:click="register" type="button" value="Sign In">
+        </div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+        el: '#app',
+        data: {
+            login: '',
+            anon: true,
+        },
+        methods: {
+            autorize: function(e){
+                const data = e.target.parentNode
+                $.ajax({
+                    method: "POST",
+                    url: "http://127.0.0.1:5000/api/v1/auth",
+                    data:  {
+                        login: data.querySelector("input[name=login]").value,
+                        password: data.querySelector("input[name=password]").value,
+                    },
+                    success: function (response){
+                        console.log(response);
+                        if (response.substr(0,5) != "ERROR"){
+                            app.login = response
+                            app.anon = false
+                        }
+                    }
+                })
+            },
+            register: function(e){
+                const data = e.target.parentNode
+                $.ajax({
+                    method: "POST",
+                    url: "http://127.0.0.1:5000/api/v1/register_company",
+                    data:  {
+                        login: data.querySelector("input[name=login]").value,
+                        password: data.querySelector("input[name=password]").value,
+                    },
+                    success: function (response){
+                        console.log(response.substr(0,5));
+                        if (response.substr(0,5) != "ERROR"){
+                            app.login = response
+                            app.anon = false
+                        }
+                    }
+                })
+            }
+        }})          
+    </script>
+</body>
+</html>

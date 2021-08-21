@@ -60,7 +60,14 @@
                 <input v-on:click="register" type="button" value="Sign In">
         </div>
         </div>
-
+        Создание тасков
+        <div class="wrap">
+            <div class="auth" v-if="anon">  
+                <input type="text" name="login" required>
+                <input type="password" name="password" required>
+                <input v-on:click="register" type="button" value="Sign In">
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
@@ -110,6 +117,7 @@
                 })
             }
         }})          
+        
     </script>
 </body>
 </html>

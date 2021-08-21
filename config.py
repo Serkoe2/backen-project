@@ -4,8 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
     if  os.environ.get('DATABASE_URL'):
-        os.environ.get('DATABASE_URL', '').replace(
-        'postgres://', 'postgresql://')
+        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', '').replace('postgres://', 'postgresql://')
     else:
         SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:q@localhost:6666/GetOffer'
     SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -16,7 +16,7 @@ def userFind(data):
 
 def new(data): 
     if ( userFind(data) ):
-        return False 
+        return {"status": False, "data":{"error": "user already register"}}
     try:
         u = User()
         if ("email" in data):

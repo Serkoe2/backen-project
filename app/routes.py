@@ -24,6 +24,7 @@ def new_user():
     if ('password' not in request.json):
         return jsonify({"status":False, "data": {"error": "No password"}})
     result = user.new(request.json)
+    print(result)
     if (not result["status"]):
         return jsonify(result)
     session['slug'] = result["data"]["slug"]

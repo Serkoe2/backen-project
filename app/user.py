@@ -1,9 +1,7 @@
-from enum import Flag
-from operator import truediv
 from app import db
-from app.models import User, Company
+from app.models import User
 
-def userFind(data):
+def find(data):
     if ("email" in data and 'phone' in data):
         u = db.session.query(User).filter(User.email == data['email'] or User.phone == data['phone']).first()
     elif ("email" in data):
@@ -15,7 +13,7 @@ def userFind(data):
     return u
 
 def new(data): 
-    if ( userFind(data) ):
+    if ( find(data) ):
         return {"status": False, "data":{"error": "user already register"}}
     try:
         u = User()
@@ -36,7 +34,7 @@ def new(data):
 
 def auth(data):
     try:
-        u = userFind(data)
+        u = find(data)
         if (not u):
             return {"status": False, "data": "User not found"}
         if (not u.check_password(data['password'])):
@@ -71,12 +69,12 @@ def update(slug, data):
         if ("current_password" in data and u.check_password(data["current_password"])):
             editSecure = True
         if ("email" in data and editSecure):
-            if (not userFind({"email": data["email"]})):
+            if (not find({"email": data["email"]})):
                 u.email = data["email"]
             else:
                 response["email_error"]= "email is forbidden"
         if ("phone" in data and editSecure):
-            if (not userFind({"phone": data["phone"]})):
+            if (not find({"phone": data["phone"]})):
                 u.phone = data["phone"]
             else:
                 response["phone_error"] = "phone is forbidden"     

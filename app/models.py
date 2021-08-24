@@ -1,7 +1,7 @@
 from enum import Flag
 from sqlalchemy.sql.elements import Null
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
+from app import command, db
 from datetime import datetime
 
 ROLE_USER = 'candidate'
@@ -27,7 +27,6 @@ class User(db.Model):
             self.slug = user_slug
             return self.slug
         return False
-
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
     def check_password(self, password):
@@ -38,26 +37,43 @@ class User(db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.email)
 
-class Company(db.Model):
+class Command(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     created = db.Column(db.DateTime(), default=datetime.utcnow)
     name = db.Column(db.String(120), index = True)
+    slug = db.Column(db.String(120), index = True, unique = True)
     description = db.Column(db.Text)
-    tasks = db.relationship('Task', backref='company')
+    owner = db.Column(db.Integer)
+    def getInfo(self):
+        return {"name": self.name,"description": self.description,  "slug" : self.slug, "owner": self.owner}
+    def set_slug(self, command_slug = False):
+        if (not command_slug):
+            self.slug = "id{}".format(self.id)
+            return self.slug
+        if (not db.session.query(Command).filter(Command.slug == command_slug ).first()):
+            self.slug = command_slug
+            return self.command_slug
+        return False
+
+class Command_User_Assigment(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    command_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
 
 # Сущность, которая явяется родительской ссылкой для Целей(Goal)
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(120))
+    grade = db.Column(db.String(30))
+    description = db.Column(db.Text)
+    command = db.Column(db.Integer, index = True)
+    owner = db.Column(db.Integer)
     created = db.Column(db.DateTime(), default=datetime.utcnow)
-    author = db.Column(db.Integer, db.ForeignKey('company.id'))
-    goals = db.relationship('Goal', backref='goals')
 
 class Goal(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     subject = db.Column(db.String(120))
     description = db.Column(db.Text)
-    parent_Task = db.Column(db.Integer, db.ForeignKey('task.id'))
 
 class User_Status_Task(db.Model):
     id = db.Column(db.Integer, primary_key = True)

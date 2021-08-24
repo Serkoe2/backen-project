@@ -1,9 +1,7 @@
 from logging import log
 import re
-from app import app, db, user
-from app.models import User, Company
+from app import app, command, user, task
 from flask import  session, request, jsonify
-
 
 @app.route('/')
 def hello_world():
@@ -64,19 +62,47 @@ def userUpdate():
     result = user.update(session["slug"], request.json)
     return jsonify(result)
 
-# ----------------------------------Устаревшие методы ----------------------------------
-# регистрация компании
-@app.route('/api/v1/addNewCompany', methods = ['POST'])
-def register_company():
+@app.route('/api/v1/command/new', methods = ['POST'])
+def new_command():
     if (not request.is_json):
-        return "ERROR:DATA is not JSON"
-    data = request.json
-    if (not "name" in data or not "description" in data):
-        return "ERROR:DATA is not correct format"
-    c = Company()
-    c.name = data['name']
-    c.description = data['description']
-    return "OK"
+        return jsonify({"status":False, "data": {"error": "Data is not JSON"}})
+    if ("slug" not in session):
+        return jsonify({"status":False, "data": {"error": "Non auth user"}})
+    if ('name' not in request.json or request.json['name'] == ''):
+        return jsonify({"status":False, "data": {"error": "invalid name"}})
+
+    result = command.new(request.json,session['slug'])
+    if (not result["status"]):
+        return jsonify(result)
+    session['role'] = 'command'
+    return jsonify(result)
+
+@app.route('/api/v1/command/get/<slug>', methods = ['POST'])
+def commandGet(slug):
+    if (slug == ''):
+        return jsonify({"status":False, "data": {"error": "invalid name"}})
+    if ('slug' in session):
+        result = command.get(slug, session['slug'])
+    else:
+        result = command.get(slug)
+    return jsonify(result)
+
+@app.route('/api/v1/task/new', methods = ['POST'])
+def taskNew():
+    if (not request.is_json):
+        return jsonify({"status":False, "data": {"error": "Data is not JSON"}})
+    if ("slug" not in session):
+        return jsonify({"status":False, "data": {"error": "Non auth user"}})
+    if ('name' not in request.json or request.json['name'] == ''):
+        return jsonify({"status":False, "data": {"error": "invalid name"}})
+    if ('command_slug' not in request.json or request.json['command_slug'] == ''):
+        return jsonify({"status":False, "data": {"error": "invalid command"}})
+
+    request.json['user'] = session['slug']
+    result = task.new(request.json)
+    return jsonify(result)
+
+# ----------------------------------Устаревшие методы ----------------------------------
 
 # Создать новую таску или апдейт старой
 # Принимаемые данные JSON

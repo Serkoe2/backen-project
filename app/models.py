@@ -31,9 +31,6 @@ class User(db.Model):
         self.password_hash = generate_password_hash(password)
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    def getInfo(self):
-        return {"email": self.email,"phone": self.phone, "name": self.name, "surname": self.surname,
-                "role": self.role, "slug" : self.slug}
     def __repr__(self):
         return '<User {}>'.format(self.email)
 

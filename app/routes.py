@@ -1,7 +1,7 @@
 from logging import log
 import re
-from app import app, command, user, task
-from flask import  session, request, jsonify
+from app import app, command, user, task, views
+from flask import  session, request, jsonify, render_template
 
 @app.route('/')
 def hello_world():
@@ -102,6 +102,22 @@ def taskNew():
     result = task.new(request.json)
     return jsonify(result)
 
+# ----------------------------------Админка методы ----------------------------------
+@app.route('/c9OXvzWc281bXK0xohPv/<table>', methods = ['GET','POST'])
+def getTable(table):
+    if (request.method == 'GET'):
+        return render_template('views.html')
+    if (request.method == 'POST'):
+        if (table == "user"):
+            result = views.getUsers()
+        elif (table == "command"):
+            result = views.getCommands()
+        elif (table == "task"):
+            result = views.getTasks()
+        elif (table == "cus"):
+            result = views.getCommand_User_Assigment()
+
+        return jsonify(result)
 # ----------------------------------Устаревшие методы ----------------------------------
 
 # Создать новую таску или апдейт старой

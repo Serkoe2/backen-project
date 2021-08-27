@@ -37,6 +37,8 @@ def get(cslug ,uslug = False):
         return {"status": True, "data": c.getInfo()}
     
     result = checkUserInCommand(cslug, uslug)
+    if (not result["status"]):
+        return result
     result["data"] = result["data"]["command"].getInfo()    
     return result
 

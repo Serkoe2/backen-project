@@ -32,15 +32,20 @@ def all(data):
         data.append(i.getInfo())
     return data
 
+def get(data):
+    t = db.session.query(Task).filter_by(command = check['data']['command'].id, id = data["task_id"]).first()
+    if (not t):
+        return {"status": "false", data: { "error": "task not found"}}
+
+    return {"status": True, "data":t.getIngo()}
+
 def update(data):
     check = command.checkUserInCommand(data['command_slug'],data['user'])
+    if (not check["status"]):
+        return check
     if ('edit' not in check):
         return {"status": "false", data: { "error": "forbidden"}}
     t = db.session.query(Task).filter_by(command = check['data']['command'].id, id = data["task_id"]).first()
-    print(t)
-    print(check['data']['command'].id)
-    print(data["task_id"])
-    print(t.getInfo())
     if (not t):
         return {"status": "false", data: { "error": "task not found"}}
     errors = {}

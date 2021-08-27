@@ -112,6 +112,18 @@ def taskAll():
     result = task.all(request.json)
     return jsonify(result)
 
+@app.route('/api/v1/task/get', methods = ['POST'])
+def taskAll():
+    if (not request.is_json):
+        return jsonify({"status":False, "data": {"error": "Data is not JSON"}})
+    if ('command_slug' not in request.json or request.json['command_slug'] == ''):
+        return jsonify({"status":False, "data": {"error": "invalid command"}})
+    if ("task_id" not in request.json):
+        return jsonify({"status":False, "data": {"error": "invalid task id"}})
+    
+    result = task.get(request.json)
+    return jsonify(result)
+
 @app.route('/api/v1/task/update', methods = ['POST'])
 def taskUpdate():
     if (not request.is_json):

@@ -6,6 +6,7 @@ from datetime import datetime
 
 ROLE_USER = 'candidate'
 ROLE_HR = 'hr'
+GRADES = ['junior','middle','senior']
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -66,6 +67,9 @@ class Task(db.Model):
     command = db.Column(db.Integer, index = True)
     owner = db.Column(db.Integer)
     created = db.Column(db.DateTime(), default=datetime.utcnow)
+
+    def getInfo(self):
+        return {"id":self.id, "name":self.name, "grade": self.grade, "description": self.description, "created":self.created}
 
 class Goal(db.Model):
     id = db.Column(db.Integer, primary_key = True)

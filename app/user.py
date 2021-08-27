@@ -3,7 +3,7 @@ from app.models import User
 
 def find(data):
     if ("email" in data and 'phone' in data):
-        u = db.session.query(User).filter(User.email == data['email'] or User.phone == data['phone']).first()
+        u = db.session.query(User).filter_by(email == data['email'], phone == data['phone']).first()
     elif ("email" in data):
         u = db.session.query(User).filter(User.email == data['email']).first()
     elif ("phone" in data):

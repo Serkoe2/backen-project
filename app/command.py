@@ -47,6 +47,6 @@ def checkUserInCommand(cslug, uslug):
     u = db.session.query(User).filter(User.slug == uslug).first()
     if (not u):
         return {"status": False, "data":{"error": "user not found"}}
-    if (db.session.query(Command_User_Assigment).filter(Command_User_Assigment.command_id == c.id and Command_User_Assigment.user_id == u.id).first()):
+    if (db.session.query(Command_User_Assigment).filter_by(command_id = c.id, user_id = u.id).first()):
         return {"status": True, "data":{"command": c, "user": u}, "edit" : True}
     return {"status": True, "data":{"command": c, "user": u}}

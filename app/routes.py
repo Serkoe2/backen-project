@@ -98,8 +98,33 @@ def taskNew():
     if ('command_slug' not in request.json or request.json['command_slug'] == ''):
         return jsonify({"status":False, "data": {"error": "invalid command"}})
 
-    request.json['user'] = session['slug']
+    request.json["user"] = session["slug"]
     result = task.new(request.json)
+    return jsonify(result)
+
+@app.route('/api/v1/task/all', methods = ['POST'])
+def taskAll():
+    if (not request.is_json):
+        return jsonify({"status":False, "data": {"error": "Data is not JSON"}})
+    if ('command_slug' not in request.json or request.json['command_slug'] == ''):
+        return jsonify({"status":False, "data": {"error": "invalid command"}})
+
+    result = task.all(request.json)
+    return jsonify(result)
+
+@app.route('/api/v1/task/update', methods = ['POST'])
+def taskUpdate():
+    if (not request.is_json):
+        return jsonify({"status":False, "data": {"error": "Data is not JSON"}})
+    if ("slug" not in session):
+        return jsonify({"status":False, "data": {"error": "Non auth user"}})
+    if ("command_slug" not in request.json or request.json['command_slug'] == ''):
+        return jsonify({"status":False, "data": {"error": "invalid command"}})
+    if ("task_id" not in request.json):
+        return jsonify({"status":False, "data": {"error": "invalid task id"}})
+
+    request.json['user'] = session['slug']
+    result = task.update(request.json)
     return jsonify(result)
 
 # ----------------------------------Админка методы ----------------------------------

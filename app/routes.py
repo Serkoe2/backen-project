@@ -113,7 +113,7 @@ def taskAll():
     return jsonify(result)
 
 @app.route('/api/v1/task/get', methods = ['POST'])
-def taskAll():
+def taskGet():
     if (not request.is_json):
         return jsonify({"status":False, "data": {"error": "Data is not JSON"}})
     if ('command_slug' not in request.json or request.json['command_slug'] == ''):

@@ -2,5 +2,6 @@ flask
 flask-sqlalchemy
 flask_migrate
 flask_cors
-psycopg2
 gunicorn
+requests
+psycopg2

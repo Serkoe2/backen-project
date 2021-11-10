@@ -1,7 +1,10 @@
 from logging import log
 import re
+import json
 from app import app, command, user, task, views
-from flask import  session, request, jsonify, render_template
+from flask import  session, request, jsonify, render_template, redirect
+from . import Autorize
+
 
 @app.route('/')
 def hello_world():
@@ -155,6 +158,22 @@ def getTable(table):
             result = views.getCommand_User_Assigment()
 
         return jsonify(result)
+
+# ----------------------------------Тест методы ----------------------------------
+@app.route('/auth_google')
+def test_auth():
+    #return redirect(google_auth.get_auth_url())
+    return redirect(Autorize.Google.get_auth_url())
+
+@app.route('/test', methods = ['GET','POST'])
+def handler_redirect():
+    code = request.args.get('code')
+    data = Autorize.Google.get_token_url(code)
+    info = Autorize.Google.get_info_url(data["access_token"], data["id_token"])
+    if (not info):
+        return jsonify({"status":False, "data": {"error": "Auth failed"}})
+    return jsonify(info)
+
 # ----------------------------------Устаревшие методы ----------------------------------
 
 # Создать новую таску или апдейт старой

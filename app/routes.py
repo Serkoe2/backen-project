@@ -1,10 +1,12 @@
 from logging import log
 import re
 import json
-from app import app, command, user, task, views
+from app import app, views
+from app.Controller import controller
 from flask import  session, request, jsonify, render_template, redirect
-from . import Autorize
-
+from app.Autorize import auth
+from app.API_Test import test
+from app.Models import User
 
 @app.route('/')
 def hello_world():
@@ -24,8 +26,7 @@ def new_user():
         return jsonify({"status":False, "data": {"error": "No email"}})
     if ('password' not in request.json):
         return jsonify({"status":False, "data": {"error": "No password"}})
-    result = user.new(request.json)
-    print(result)
+    result = controller.User.new(request.json)
     if (not result["status"]):
         return jsonify(result)
     session['slug'] = result["data"]["slug"]
@@ -42,7 +43,7 @@ def auth():
         return jsonify({"status":False, "data": {"error": "No email or phone"}})
     if ('password' not in request.json):
         return jsonify({"status":False, "data": {"error": "No password"}})
-    result = user.auth(request.json)
+    result = controller.User.auth(request.json)
     if (not result["status"]):
         return jsonify(result)
     session['slug'] = result["data"]["slug"]
@@ -51,7 +52,7 @@ def auth():
 
 @app.route('/api/v1/user/get/<slug>', methods = ['POST'])
 def userGet(slug):
-    result = user.get(slug)
+    result = controller.User.get(slug)
     if ("slug" in session and session["slug"] == slug):
         result["edit"] = True
     return jsonify(result)
@@ -62,7 +63,7 @@ def userUpdate():
         return jsonify({"status":False, "data": {"error": "data is not JSON"}})
     if ("slug" not in session):
         return jsonify({"status":False, "data": {"error": "Non auth user"}})
-    result = user.update(session["slug"], request.json)
+    result = controller.User.update(session["slug"], request.json)
     return jsonify(result)
 
 @app.route('/api/v1/command/new', methods = ['POST'])
@@ -74,7 +75,7 @@ def new_command():
     if ('name' not in request.json or request.json['name'] == ''):
         return jsonify({"status":False, "data": {"error": "invalid name"}})
 
-    result = command.new(request.json,session['slug'])
+    result = controller.Command.new(request.json,session['slug'])
     if (not result["status"]):
         return jsonify(result)
     session['role'] = 'command'
@@ -85,9 +86,9 @@ def commandGet(slug):
     if (slug == ''):
         return jsonify({"status":False, "data": {"error": "invalid name"}})
     if ('slug' in session):
-        result = command.get(slug, session['slug'])
+        result = controller.Command.get(slug, session['slug'])
     else:
-        result = command.get(slug)
+        result = controller.Command.get(slug)
     return jsonify(result)
 
 @app.route('/api/v1/task/new', methods = ['POST'])
@@ -102,7 +103,7 @@ def taskNew():
         return jsonify({"status":False, "data": {"error": "invalid command"}})
 
     request.json["user"] = session["slug"]
-    result = task.new(request.json)
+    result = controller.Task.new(request.json)
     return jsonify(result)
 
 @app.route('/api/v1/task/all', methods = ['POST'])
@@ -112,7 +113,7 @@ def taskAll():
     if ('command_slug' not in request.json or request.json['command_slug'] == ''):
         return jsonify({"status":False, "data": {"error": "invalid command"}})
 
-    result = task.all(request.json)
+    result = controller.Task.all(request.json)
     return jsonify(result)
 
 @app.route('/api/v1/task/get', methods = ['POST'])
@@ -124,7 +125,7 @@ def taskGet():
     if ("task_id" not in request.json):
         return jsonify({"status":False, "data": {"error": "invalid task id"}})
     
-    result = task.get(request.json)
+    result = controller.Task.get(request.json)
     return jsonify(result)
 
 @app.route('/api/v1/task/update', methods = ['POST'])
@@ -139,7 +140,7 @@ def taskUpdate():
         return jsonify({"status":False, "data": {"error": "invalid task id"}})
 
     request.json['user'] = session['slug']
-    result = task.update(request.json)
+    result = controller.Task.update(request.json)
     return jsonify(result)
 
 # ----------------------------------Админка методы ----------------------------------
@@ -163,16 +164,21 @@ def getTable(table):
 @app.route('/auth_google')
 def test_auth():
     #return redirect(google_auth.get_auth_url())
-    return redirect(Autorize.Google.get_auth_url())
+    return redirect(auth.Google.get_auth_url())
 
 @app.route('/test', methods = ['GET','POST'])
 def handler_redirect():
     code = request.args.get('code')
-    data = Autorize.Google.get_token_url(code)
-    info = Autorize.Google.get_info_url(data["access_token"], data["id_token"])
+    data = auth.Google.get_token_url(code)
+    info = auth.Google.get_info_url(data["access_token"], data["id_token"])
     if (not info):
         return jsonify({"status":False, "data": {"error": "Auth failed"}})
     return jsonify(info)
+
+@app.route("/test2", methods = ['POST'])
+def test_2():
+    result = test.User.test()
+    return result
 
 # ----------------------------------Устаревшие методы ----------------------------------
 

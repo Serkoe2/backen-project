@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User
+from app.Models.User import User
 
 @app.shell_context_processor
 def make_shell_context():

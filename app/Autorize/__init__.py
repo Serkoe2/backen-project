@@ -1,3 +1,7 @@
-from . import GoogleAuth
+from app.Autorize.GoogleAuth import GoogleAuth
 
-Google = GoogleAuth.GoogleAuth()
+class Autorize:
+    def __init__(self):
+        self.Google = GoogleAuth()
+
+auth = Autorize()

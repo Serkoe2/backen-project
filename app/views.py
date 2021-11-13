@@ -1,7 +1,7 @@
 from flask.json import jsonify
 from app import db
 import sqlalchemy
-from app.models import Command, Task, User, Command_User_Assigment
+from app.Models import *
 import inspect
 
 
@@ -21,6 +21,7 @@ def getUsers():
         data.append(temp)
     result["data"] = data
     return result
+    
 def getCommands():
     objs = db.session.query(Command).all()
     result = inspect.getmembers(Command)
@@ -37,6 +38,7 @@ def getCommands():
         data.append(temp)
     result["data"] = data
     return result
+
 def getCommand_User_Assigment():
     objs = db.session.query(Command_User_Assigment).all()
     result = inspect.getmembers(Command_User_Assigment)

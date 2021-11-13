@@ -14,5 +14,5 @@ migrate = Migrate(app, db)
 if app.debug:
     print(app.config)
 
-from app import routes, models
+from app import routes
 

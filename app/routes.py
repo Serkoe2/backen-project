@@ -4,7 +4,7 @@ import json
 from app import app, views
 from app.Controller import controller
 from flask import  session, request, jsonify, render_template, redirect
-from app.Autorize import auth
+from app.Autorize import authorizer
 from app.API_Test import test
 from app.Models import User
 
@@ -164,13 +164,14 @@ def getTable(table):
 @app.route('/auth_google')
 def test_auth():
     #return redirect(google_auth.get_auth_url())
-    return redirect(auth.Google.get_auth_url())
+    return redirect(authorizer.Google.get_auth_url())
 
 @app.route('/test', methods = ['GET','POST'])
 def handler_redirect():
     code = request.args.get('code')
-    data = auth.Google.get_token_url(code)
-    info = auth.Google.get_info_url(data["access_token"], data["id_token"])
+    data = authorizer.Google.get_token_url(code)
+    print(data)
+    info = authorizer.Google.get_info_url(data["access_token"], data["id_token"])
     if (not info):
         return jsonify({"status":False, "data": {"error": "Auth failed"}})
     return jsonify(info)

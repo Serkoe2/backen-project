@@ -65,7 +65,3 @@ class GoogleAuth:
                     input("type your id token:\n") )
             elif (ch == '0'):
                 exit(0)
-
-if __name__ == '__main__':
-    test = GoogleAuth()
-    test.menu(True)

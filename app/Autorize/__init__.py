@@ -4,4 +4,4 @@ class Autorize:
     def __init__(self):
         self.Google = GoogleAuth()
 
-auth = Autorize()
+authorizer = Autorize()

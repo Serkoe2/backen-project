@@ -3,8 +3,10 @@ print("### import config ###")
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
-    if  os.environ.get('DATABASE_URL'):
-        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', '').replace('postgres://', 'postgresql://')
+    if (os.environ.get('POSTGRES_HOST')):
+        SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@postgres:5432/test".format(
+        os.environ.get('POSTGRES_USERNAME'),
+        os.environ.get('POSTGRES_PASSWORD'))
     else:
         SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:q@localhost:5432/test'
     SQLALCHEMY_TRACK_MODIFICATIONS = False

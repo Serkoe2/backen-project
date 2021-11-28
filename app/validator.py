@@ -1,2 +1,2 @@
 class Validator():
-    print("future")
+    print("futue")

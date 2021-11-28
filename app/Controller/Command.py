@@ -53,3 +53,4 @@ class CommandController:
         if (db.session.query(Command_User_Assigment).filter_by(command_id = c.id, user_id = u.id).first()):
             return {"status": True, "data":{"command": c, "user": u}, "edit" : True}
         return {"status": True, "data":{"command": c, "user": u}}
+    

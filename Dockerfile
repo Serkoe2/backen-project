@@ -1,6 +1,5 @@
 # Create our image based on Python 3.8
-FROM python:3.8
-
+FROM python:3.6-slim-buster
 # Expose ports
 EXPOSE 5000
 
@@ -17,4 +16,4 @@ RUN python -m pip install -r requirements.txt
 
 # Set working directory and addour Flask API files
 WORKDIR /app
-ADD . /app
+ADD . .

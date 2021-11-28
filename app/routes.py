@@ -11,9 +11,9 @@ from app.Models import User
 @app.route('/')
 def hello_world():
     if 'role' in session:
-        return session['role']
+        return "session['role']"
     else:
-        session['role'] = 'admin'
+        session['role'] = 'admin1'
         return "unknow"
 
 # Если мне передадут пользователей с пустыми строками??

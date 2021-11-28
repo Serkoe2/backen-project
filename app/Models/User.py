@@ -2,9 +2,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 from datetime import datetime
 
-ROLE_USER = 'candidate'
-ROLE_HR = 'hr'
-GRADES = ['junior','middle','senior']
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -14,7 +11,6 @@ class User(db.Model):
     name  = db.Column(db.String(64))
     surname = db.Column(db.String(64))
     skills = db.Column(db.String(64))
-    role = db.Column(db.SmallInteger, default = ROLE_USER)
     password_hash = db.Column(db.String(128))
     created = db.Column(db.DateTime(), default=datetime.utcnow)
     

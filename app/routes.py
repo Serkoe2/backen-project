@@ -1,6 +1,8 @@
 from logging import log
 import re
 import json
+
+import requests
 from app import app, views
 from app.Controller import controller
 from flask import  session, request, jsonify, render_template, redirect
@@ -162,9 +164,33 @@ def getTable(table):
 
 # ----------------------------------Тест методы ----------------------------------
 @app.route('/auth_google')
-def test_auth():
-    #return redirect(google_auth.get_auth_url())
+def test_google():
     return redirect(authorizer.Google.get_auth_url())
+
+@app.route('/auth_vk')
+def test_vk():
+    return redirect(authorizer.Vk.get_auth_url())
+
+@app.route('/auth_yandex')
+def test_yandex():
+    return redirect(authorizer.Yandex.get_auth_url())
+
+@app.route('/auth_handler/<method>',  methods = ['GET','POST'])
+def auth_handler(method):
+    resp = ""
+    if (method == "vk"):
+        auth_code = request.args.get('code')
+        resp = authorizer.Vk.get_info(auth_code)
+    elif (method == "yandex"):
+        if request.method == "GET":
+            return render_template('ya_auth.html')
+        else:
+            print(request.form)
+            auth_code = request.form.get('access_token')
+            resp = authorizer.Yandex.get_info(auth_code)
+            print(resp)
+            return redirect('/')
+    return jsonify(resp)
 
 @app.route('/test', methods = ['GET','POST'])
 def handler_redirect():

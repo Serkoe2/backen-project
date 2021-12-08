@@ -48,3 +48,8 @@ Thumbs.db
 *.mov
 *.wmv
 
+__pycache__
+migrations
+TODO
+env
+Tests

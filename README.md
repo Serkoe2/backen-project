@@ -1,29 +1,14 @@
-# README #
-
-This README would normally document whatever steps are necessary to get your application up and running.
-
-### What is this repository for? ###
-
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+<h4>запуск в Docker compose</h4>
+При первом запуске и при инициализации/миграции Базы Данных обязателены оба скрипта!
+```
+docker-compose -f docker-compose.yml up --build
+docker-compose exec api bash upgrade_db.sh
+```
+<h4>Локальный запуск</h4>
+Backend
+Соединение с Базой Данных в Backend/config.py
+```
+cd Backend/
+bash install.sh
+flask run
+```

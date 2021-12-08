@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+      postgres:
+            image: postgres
+            container_name: get_offer_app_db
+            restart: unless-stopped
+            ports:
+                  - "5432:5432"
+            environment:
+                  POSTGRES_USER: "starter_kit"
+                  POSTGRES_PASSWORD: "qwerty"
+                  POSTGRES_DB: test
+            volumes:
+                  - postgres_data_getoffer:/var/lib/postgresql/data/
+            networks:
+                  - backend
+            
+      getoffer_api:
+            build: 
+                  context: .
+                  dockerfile: Dockerfile
+            container_name: get_offer_api
+            command: gunicorn --bind 0.0.0.0:5000 app:app
+            ports:
+                  - "5000:5000"
+            volumes:
+                  - ./app:/app/app
+            environment:
+                  POSTGRES_HOST: postgres
+                  POSTGRES_USERNAME: "starter_kit"
+                  POSTGRES_PASSWORD: "qwerty"
+            depends_on: 
+                  - postgres
+            networks:
+                  - backend            
+
+networks:
+      backend:
+            driver: bridge
+volumes:
+      postgres_data_getoffer:
+            driver: local

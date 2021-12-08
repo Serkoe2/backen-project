@@ -1,5 +1,8 @@
 # ger-offer — backend
+
 [Все репозитории команды](https://bitbucket.org/getoffer/)
+
+[Репозиторий](https://bitbucket.org/getoffer/backend/), для запуска backend'а проекта.
 
 
 

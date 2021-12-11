@@ -1,8 +1,11 @@
 import os
+from dotenv import load_dotenv
 print("### import config ###")
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
+    if not os.getenv("ENVIROMENT"):
+        load_dotenv('.flaskenv')
     if (os.environ.get('POSTGRES_HOST')):
         SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{}:{}@postgres:5432/test".format(
         os.environ.get('POSTGRES_USERNAME'),

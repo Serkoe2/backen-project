@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        a{
+            text-decoration: none;
+            font: 1em sans-serif;
+            color: white;
+        }
+        .email{
+            margin: 0 auto;
+            width: 60%;            
+            /* Центрирование текста на всей странице */
+            text-align: center;
+        }
+        .secret-code-wrapper{
+            background-color: #f3f3f3;
+            border-radius: 0.3rem;
+            padding: 1rem 0.8rem;
+        }
+        .secret-code{
+            margin: 0 auto;
+            background-color: white;
+        }
+        .content{
+            width: 40%;
+            padding: 0.6rem 0.4rem;
+            border-radius: 0.5rem;
+        }
+        .submit-btn{
+            margin: 0 auto;
+            background-color: #1565C0;
+        }
+        .submit-btn:hover{
+            transition-duration: 0.5s;
+            background-color: #5c9ece;
+        }
+    </style>
+<body>
+    <table class="email">
+        <tr>
+            <td><h1>Подтвердите вашу почту</h1></td>
+        </tr>
+        <tr>
+            <td><span>Для этого нажмите на кнопку и введите код</span></td>
+        </tr>
+        <tr>
+            <td><a href="{{url}}" target="_blank"><div class="submit-btn content">Подтвердить</div></a></td>
+        </tr>
+        <tr>
+            <td><div class="secret-code-wrapper"><div class="secret-code content">{{code}}</div></div></td>
+        </tr>
+    </table>
+</body>
+</html>

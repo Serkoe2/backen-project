@@ -3,7 +3,7 @@ import re
 import json
 
 import requests
-from app import app, views
+from app import app, views, mail
 from app.Controller import controller
 from flask import  session, request, jsonify, render_template, redirect
 from app.Autorize import authorizer
@@ -207,30 +207,11 @@ def test_2():
     result = test.User.test()
     return result
 
-# ----------------------------------Устаревшие методы ----------------------------------
-
-# Создать новую таску или апдейт старой
-# Принимаемые данные JSON
-# task_id - id родительского таска
-# Если параметра нет, автоматически будет создан новый task
-# Для создания новой цели goals не должен быть пустым
-# Goals - массив целей
-# subject - задача цели
-# decription - описание цели
-# пример создания нового таска:
-# {goals: [{subject: "TEST" , description:"test test test"}]}
-# В случае успеха возвращает id
-@app.route('/api/v1/addNewGoal', methods = ['POST'])
-def addNewGoal():
-    #принять аргументы json
-    if (not request.is_json):
-        return "ERROR:DATA is not JSON"
-    data = request.json
-    if (not "task" in data or not "goals" in data):
-        return "ERROR:DATA is not correct format"
-    # добавление goal в task
-    if ("id" in data['task']):
-        return "future"
-    # создание цели
-    
+@app.route("/test_mailer", methods = ['POST'])
+def test_mailer():
+    from random import randint
+    to = request.json["to"]
+    data = {"url": "https://google.com", "code": str(randint(1000, 9999))}
+    template_path = "template2.html"
+    mail.send(to, "Get Offer", template_path, data)
     return "OK"

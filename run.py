@@ -1,6 +1,9 @@
-from app import app, db
-from app.Models.User import User
+from config import Config
+from flask_migrate import Migrate, migrate
+from apps import create_app, db
 
-@app.shell_context_processor
-def make_shell_context():
-    return {'db': db, 'User': User}
+app = create_app(Config())
+Migrate(app, db)
+
+if __name__ == "__main__":
+    app.run(debug=True, use_reloader=True)

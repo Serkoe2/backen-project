@@ -12,7 +12,11 @@
 docker-compose -f docker-compose.yml up -d --build
 ```
 
+или
 
+```
+docker pull serkoes/backend_getoffer_api
+```
 
 ## Локальный запуск
 

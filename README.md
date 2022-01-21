@@ -8,11 +8,8 @@
 
 ## Запуск в docker-compose
 
-При первом запуске и при инициализации/миграции Базы Данных обязателены оба скрипта!
-
 ```
-docker-compose -f docker-compose.yml up --build
-docker-compose exec api bash upgrade_db.sh
+docker-compose -f docker-compose.yml up -d --build
 ```
 
 
